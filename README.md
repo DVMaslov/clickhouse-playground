@@ -25,8 +25,14 @@ Individual nodes are mapped for debugging:
 - ch3: ports 9003/8123
 - ch4: ports 9004/8124
 
-To stop and remove containers:
+To stop the cluster without deleting data, run:
 
 ```bash
-docker compose down
+./stop.sh
+```
+
+To stop the cluster and remove all created data, run:
+
+```bash
+./stop-clean.sh
 ```
