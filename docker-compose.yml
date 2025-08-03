@@ -2,75 +2,75 @@ version: '3.7'
 
 services:
   zookeeper:
-    image: zookeeper:3.7
+    image: ${ZK_IMAGE}:${ZK_VERSION}
     container_name: zookeeper
     ports:
-      - "2181:2181"
+      - "${ZK_PORT}:2181"
     volumes:
-      - ./config/zookeeper/zoo.cfg:/conf/zoo.cfg
-      - ./volumes/zookeeper/data:/data
-      - ./volumes/zookeeper/datalog:/datalog
+      - ${CONFIG_DIR}/zookeeper/zoo.cfg:/conf/zoo.cfg
+      - ${VOLUMES_DIR}/zookeeper/data:/data
+      - ${VOLUMES_DIR}/zookeeper/datalog:/datalog
 
   ch1:
-    image: clickhouse/clickhouse-server:24.4
+    image: ${CH_IMAGE}:${CH_VERSION}
     container_name: ch1
     hostname: ch1
     volumes:
-      - ./config/clickhouse/node1/config.xml:/etc/clickhouse-server/config.d/config.xml
-      - ./volumes/clickhouse/node1:/var/lib/clickhouse
+      - ${CONFIG_DIR}/clickhouse/node1/config.xml:/etc/clickhouse-server/config.d/config.xml
+      - ${VOLUMES_DIR}/clickhouse/node1:/var/lib/clickhouse
     ports:
-      - "9001:9000"
-      - "8121:8123"
+      - "${CH1_NATIVE_PORT}:9000"
+      - "${CH1_HTTP_PORT}:8123"
     depends_on:
       - zookeeper
 
   ch2:
-    image: clickhouse/clickhouse-server:24.4
+    image: ${CH_IMAGE}:${CH_VERSION}
     container_name: ch2
     hostname: ch2
     volumes:
-      - ./config/clickhouse/node2/config.xml:/etc/clickhouse-server/config.d/config.xml
-      - ./volumes/clickhouse/node2:/var/lib/clickhouse
+      - ${CONFIG_DIR}/clickhouse/node2/config.xml:/etc/clickhouse-server/config.d/config.xml
+      - ${VOLUMES_DIR}/clickhouse/node2:/var/lib/clickhouse
     ports:
-      - "9002:9000"
-      - "8122:8123"
+      - "${CH2_NATIVE_PORT}:9000"
+      - "${CH2_HTTP_PORT}:8123"
     depends_on:
       - zookeeper
 
   ch3:
-    image: clickhouse/clickhouse-server:24.4
+    image: ${CH_IMAGE}:${CH_VERSION}
     container_name: ch3
     hostname: ch3
     volumes:
-      - ./config/clickhouse/node3/config.xml:/etc/clickhouse-server/config.d/config.xml
-      - ./volumes/clickhouse/node3:/var/lib/clickhouse
+      - ${CONFIG_DIR}/clickhouse/node3/config.xml:/etc/clickhouse-server/config.d/config.xml
+      - ${VOLUMES_DIR}/clickhouse/node3:/var/lib/clickhouse
     ports:
-      - "9003:9000"
-      - "8123:8123"
+      - "${CH3_NATIVE_PORT}:9000"
+      - "${CH3_HTTP_PORT}:8123"
     depends_on:
       - zookeeper
 
   ch4:
-    image: clickhouse/clickhouse-server:24.4
+    image: ${CH_IMAGE}:${CH_VERSION}
     container_name: ch4
     hostname: ch4
     volumes:
-      - ./config/clickhouse/node4/config.xml:/etc/clickhouse-server/config.d/config.xml
-      - ./volumes/clickhouse/node4:/var/lib/clickhouse
+      - ${CONFIG_DIR}/clickhouse/node4/config.xml:/etc/clickhouse-server/config.d/config.xml
+      - ${VOLUMES_DIR}/clickhouse/node4:/var/lib/clickhouse
     ports:
-      - "9004:9000"
-      - "8124:8123"
+      - "${CH4_NATIVE_PORT}:9000"
+      - "${CH4_HTTP_PORT}:8123"
     depends_on:
       - zookeeper
 
   haproxy:
-    image: haproxy:2.8
+    image: ${HAPROXY_IMAGE}:${HAPROXY_VERSION}
     container_name: haproxy
     volumes:
-      - ./config/haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg
+      - ${CONFIG_DIR}/haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg
     ports:
-      - "9000:9000"
-      - "8120:8123"
+      - "${HAPROXY_NATIVE_PORT}:9000"
+      - "${HAPROXY_HTTP_PORT}:8123"
     depends_on:
       - ch1
       - ch2
