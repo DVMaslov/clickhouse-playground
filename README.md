@@ -4,7 +4,7 @@ This project spins up a four-node ClickHouse cluster (two shards, two replicas) 
 
 ## Requirements
 - Docker with Docker Compose plugin
-- `sudo` privileges
+- Access to the `docker` command (e.g., your user is in the `docker` group or you are using rootless Docker)
 
 ## Usage
 Run the provided script to create required directories and start the cluster:
@@ -28,5 +28,5 @@ Individual nodes are mapped for debugging:
 To stop and remove containers:
 
 ```bash
-sudo docker compose down
+docker compose down
 ```
