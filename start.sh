@@ -1,15 +1,19 @@
 #!/usr/bin/env bash
 set -e
 
+set -o allexport
+[ -f .env ] && source .env
+set +o allexport
+
+VOLUMES_DIR=${VOLUMES_DIR:-./volumes}
+CLICKHOUSE_NODES=(node1 node2 node3 node4)
+
 # create data directories with root ownership
-sudo mkdir -p \
-    volumes/clickhouse/node1 \
-    volumes/clickhouse/node2 \
-    volumes/clickhouse/node3 \
-    volumes/clickhouse/node4 \
-    volumes/zookeeper/data \
-    volumes/zookeeper/datalog
-sudo chown -R root:root volumes
+for node in "${CLICKHOUSE_NODES[@]}"; do
+    sudo mkdir -p "${VOLUMES_DIR}/clickhouse/${node}"
+done
+sudo mkdir -p "${VOLUMES_DIR}/zookeeper/data" "${VOLUMES_DIR}/zookeeper/datalog"
+sudo chown -R root:root "${VOLUMES_DIR}"
 
 # start cluster
 sudo docker compose up -d
